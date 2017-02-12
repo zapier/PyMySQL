@@ -600,6 +600,7 @@ class Connection(object):
         if compress or named_pipe:
             raise NotImplementedError("compress and named_pipe arguments are not supported")
 
+        self.local_infile = local_infile
         if local_infile:
             client_flag |= CLIENT.LOCAL_FILES
 
@@ -1515,6 +1516,8 @@ class LoadLocalFile(object):
         """Send data packets from the local file to the server"""
         if not self.connection._sock:
             raise err.InterfaceError("(0, '')")
+        if not self.connection.local_infile:
+            raise Exception('LOAD LOCAL FILE is disabled via local_infile option')
         conn = self.connection
 
         try:
