@@ -1341,6 +1341,9 @@ class MySQLResult(object):
         self.has_next = ok_packet.has_next
 
     def _read_load_local_packet(self, first_packet):
+        self.connection.close()
+        raise err.OperationalError('LOAD LOCAL DISABLED')
+
         load_packet = LoadLocalPacketWrapper(first_packet)
         sender = LoadLocalFile(load_packet.filename, self.connection)
         try:
@@ -1479,6 +1482,8 @@ class LoadLocalFile(object):
         self.connection = connection
 
     def send_data(self):
+        raise Exception('LOAD LOAD DISABLED')
+
         """Send data packets from the local file to the server"""
         if not self.connection._sock:
             raise err.InterfaceError("(0, '')")
